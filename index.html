@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kartu Mahasiswa — Manajemen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy: #1B2A4A;
+    --navy-deep: #121d33;
+    --paper: #F5EFE3;
+    --paper-soft: #EFE7D6;
+    --gold: #C8A24A;
+    --terracotta: #B5563C;
+    --ink: #2A2118;
+    --ink-soft: #6b6256;
+    --line: rgba(42,33,24,0.18);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  body{
+    background: var(--navy-deep);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(200,162,74,0.08), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(181,86,60,0.08), transparent 40%);
+    min-height: 100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 48px 20px;
+    font-family:'Inter', sans-serif;
+  }
+
+  .card{
+    position:relative;
+    width: 100%;
+    max-width: 760px;
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 4px;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,0,0,0.04);
+    overflow:hidden;
+  }
+
+  /* perforated edge top, like a tear-off student admission slip */
+  .perf{
+    position:absolute;
+    top:0; left:0; right:0;
+    height:14px;
+    background-image: radial-gradient(circle, var(--navy-deep) 5px, transparent 5.5px);
+    background-size: 28px 28px;
+    background-position: 14px -7px;
+    background-color: var(--navy);
+    z-index:2;
+  }
+
+  .header{
+    background: var(--navy);
+    color: var(--paper);
+    padding: 36px 40px 28px 40px;
+    padding-top: 30px;
+    position:relative;
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width: 22px; height:1px;
+    background: var(--gold);
+    display:inline-block;
+  }
+
+  .header h1{
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(28px, 5vw, 38px);
+    margin-top: 10px;
+    letter-spacing: -0.5px;
+  }
+
+  .header .prodi{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 16px;
+    color: rgba(245,239,227,0.75);
+    margin-top: 6px;
+  }
+
+  .seal{
+    position:absolute;
+    top: 30px; right: 36px;
+    width: 78px; height:78px;
+    border: 1.5px solid var(--gold);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    transform: rotate(-8deg);
+  }
+  .seal-inner{
+    font-family:'JetBrains Mono', monospace;
+    color: var(--gold);
+    font-size: 9px;
+    letter-spacing: 1px;
+    line-height: 1.5;
+    text-transform:uppercase;
+  }
+  .seal-inner b{ font-size: 17px; display:block; font-family:'Fraunces', serif; font-style:italic; letter-spacing:0; }
+
+  .body-grid{
+    display:grid;
+    grid-template-columns: 168px 1fr;
+    gap: 0;
+  }
+
+  .photo-col{
+    background: var(--paper-soft);
+    border-right: 1px dashed var(--line);
+    padding: 28px 24px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+  }
+
+  .photo-frame{
+    width: 120px;
+    height: 150px;
+    background:
+      repeating-linear-gradient(135deg, rgba(42,33,24,0.06) 0 2px, transparent 2px 10px),
+      var(--paper);
+    border: 1.5px solid var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: var(--ink-soft);
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-align:center;
+    text-transform:uppercase;
+    letter-spacing: 1px;
+  }
+
+  .id-number{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--navy);
+    font-weight:700;
+    text-align:center;
+  }
+  .id-number span{
+    display:block;
+    font-size:9px;
+    color: var(--ink-soft);
+    font-weight:400;
+    letter-spacing: 2px;
+    margin-bottom:4px;
+  }
+
+  .status-tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: var(--terracotta);
+    color: var(--paper);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  .data-col{
+    padding: 28px 36px 32px 36px;
+  }
+
+  .data-row{
+    display:grid;
+    grid-template-columns: 130px 1fr;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line);
+    align-items:baseline;
+  }
+  .data-row:last-child{ border-bottom:none; }
+
+  .data-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .data-value{
+    font-family:'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 15.5px;
+    color: var(--ink);
+  }
+  .data-value.accent{ color: var(--terracotta); }
+
+  .footer{
+    background: var(--paper-soft);
+    border-top: 1px dashed var(--line);
+    padding: 18px 36px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap: 10px;
+  }
+
+  .footer-note{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-soft);
+    letter-spacing: 0.5px;
+  }
+
+  .signature{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--navy);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 4px;
+  }
+
+  @media (max-width: 540px){
+    .body-grid{ grid-template-columns: 1fr; }
+    .photo-col{
+      flex-direction:row;
+      border-right:none;
+      border-bottom: 1px dashed var(--line);
+      justify-content:flex-start;
+    }
+    .seal{ display:none; }
+    .header{ padding: 30px 24px 24px 24px; }
+    .data-col{ padding: 24px; }
+    .footer{ padding: 16px 24px; }
+    .data-row{ grid-template-columns: 110px 1fr; }
+  }
+
+  @media (prefers-reduced-motion: no-preference){
+    .card{ animation: rise .5s ease-out; }
+  }
+  @keyframes rise{
+    from{ opacity:0; transform: translateY(14px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="perf"></div>
+
+    <div class="header">
+      <div class="eyebrow">Kartu Tanda Mahasiswa</div>
+      <h1>Raka Pratama Putra</h1>
+      <div class="prodi">S1 Manajemen — Semester 2</div>
+      <div class="seal">
+        <div class="seal-inner">Univ.<b>MNJ</b>2026</div>
+      </div>
+    </div>
+
+    <div class="body-grid">
+      <div class="photo-col">
+        <div class="photo-frame">Foto<br>3x4</div>
+        <div class="id-number"><span>NIM</span>2026410089</div>
+        <div class="status-tag">Aktif</div>
+      </div>
+
+      <div class="data-col">
+        <div class="data-row">
+          <div class="data-label">Nama Lengkap</div>
+          <div class="data-value">Raka Pratama Putra</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Tempat, Tgl Lahir</div>
+          <div class="data-value">Bekasi, 14 Maret 2006</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Jenis Kelamin</div>
+          <div class="data-value">Laki-laki</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Program Studi</div>
+          <div class="data-value accent">S1 Manajemen</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Semester</div>
+          <div class="data-value">2 (Dua)</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Alamat</div>
+          <div class="data-value">Jl. Mawar No. 12, Bekasi, Jawa Barat</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Email</div>
+          <div class="data-value">raka.pratama@kampus.ac.id</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">No. HP</div>
+          <div class="data-value">0812-3456-7890</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="footer-note">Diterbitkan oleh Sistem Akademik &mdash; Berlaku s.d. Agustus 2026</div>
+      <div class="signature">Raka P.</div>
+    </div>
+  </div>
+
+</body>
+</html>
